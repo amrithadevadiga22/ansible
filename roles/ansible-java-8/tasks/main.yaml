@@ -10,7 +10,7 @@
     url: "{{ java_download_url }}"
     headers: "Cookie: oraclelicense=accept-securebackup-cookie"
     dest: /tmp/
-  when: not dir.stat.exists
+#  when: not dir.stat.exists
   tags:
     - java_install
 

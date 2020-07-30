@@ -1,0 +1,61 @@
+---
+
+#- name: Add Elasticsearch GPG key.
+#  rpm_key:
+#    key: https://packages.elastic.co/GPG-KEY-elasticsearch
+#    state: present
+
+#- name: Add Elasticsearch yum repository.
+#  template:
+#    src: elasticsearch.repo.j2
+#    dest: /etc/yum.repos.d/elasticsearch.repo
+#    #mode: 0644
+
+- name: Install common software requirements
+  become: true
+  yum:
+    state: present
+    name: 
+      - kibana-oss
+      - logstash
+
+#- name: Install kibana 
+#  yum: 
+#    name: kibana-oss 
+#    state: installed
+
+#- name: Install  Logstash
+#  yum:
+#    name: logstash
+#    state: installed
+
+
+- name: Configure Kibana.
+  template:
+    src: kibana.yml.j2
+    dest: /etc/kibana/kibana.yml
+#    owner: root
+#    group: elasticsearch
+#    mode: 0750
+#  notify: restart elasticsearch
+  
+- name: Start Kibana.
+  service: 
+    name: kibana
+    state: started
+    enabled: yes
+ # ignore_errors: true
+
+#- name: Allow traffic through elasticsearch TCP port in your firewall
+#  firewalld:
+#    port: "{{ elasticsearch_http_port }}/tcp"
+#    permanent: true
+#    state: enabled
+
+#- name: Make sure Elasticsearch is running before proceeding.
+#  wait_for: 
+#    host: "{{ elasticsearch_network_host }}" 
+#    port: "{{ elasticsearch_http_port }}"
+#    delay: 3
+#    timeout: 200
+    
